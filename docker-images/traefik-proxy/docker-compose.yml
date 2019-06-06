@@ -1,0 +1,95 @@
+version: '3'
+services:
+  static_service1:
+    build: ../apache-php-image/cluster1/
+    container_name: static-container1
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=static" 
+      - "traefik.frontend.rule=Host:demo.res.ch; PathPrefixStrip: /"
+      - "traefik.port=80"
+      - "traefik.docker.network=traefik_proxy"
+  express_service1:
+    build: ../express-image/cluster1/
+    container_name: express-container1
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=dynamic" 
+      - "traefik.frontend.rule=Host:demo.res.ch; PathPrefixStrip: /api/games/"
+      - "traefik.port=3000"
+      - "traefik.docker.network=traefik_proxy"
+  static_service2:
+    build: ../apache-php-image/cluster2/
+    container_name: static-container2
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=static" 
+      - "traefik.frontend.rule=Host:demo.res.ch; PathPrefixStrip: /"
+      - "traefik.port=80"
+      - "traefik.docker.network=traefik_proxy"
+  express_service2:
+    build: ../express-image/cluster2/
+    container_name: express-container2
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=dynamic" 
+      - "traefik.frontend.rule=Host:demo.res.ch; PathPrefixStrip: /api/games/"
+      - "traefik.port=3000"
+      - "traefik.docker.network=traefik_proxy"
+
+  portainer:
+    image: portainer/portainer
+    container_name: portainer
+    restart: always
+    command: -H unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./portainer/data:/data
+      - ./shared:/shared
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=portainer" 
+      - "traefik.frontend.rule=Host:demo.res.ch; PathPrefixStrip: /portainer/"
+      - "traefik.port=9000"
+      - "traefik.docker.network=traefik_proxy"
+
+  traefik:
+    hostname: traefik
+    image: traefik:latest
+    container_name: traefik
+    domainname: demo.res.ch
+    networks:
+      traefik_proxy:
+        ipv4_address: 172.20.0.10
+    ports:
+      - "80:80"
+      - "443:443"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=traefik" 
+      - "traefik.frontend.rule=Host:demo.res.ch; PathPrefixStrip: /traefik"
+      - "traefik.port=8080"
+      - "traefik.docker.network=traefik_proxy"
+      - "traefik.frontend.auth.basic.users=admin:$$apr1$$cjuIGW.x$$GagGyerJBpq7UzMkGx4lp/"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik:/etc/traefik
+      - ./shared:/shared
+
+networks:
+  traefik_proxy:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+  default:
+    driver: bridge

@@ -1,0 +1,55 @@
+version: '3'
+services:
+  static_service1:
+    build: ../apache-php-image/cluster1/
+    container_name: static-container1
+    networks:
+      static-network:
+        ipv4_address: 172.20.0.2
+  express_service1:
+    build: ../express-image/cluster1/
+    container_name: express-container1
+    networks:
+      static-network:
+        ipv4_address: 172.20.0.4
+  static_service2:
+    build: ../apache-php-image/cluster2/
+    container_name: static-container2
+    networks:
+      static-network:
+        ipv4_address: 172.20.0.3
+  express_service2:
+    build: ../express-image/cluster2/
+    container_name: express-container2
+    networks:
+      static-network:
+        ipv4_address: 172.20.0.5
+  reverse_proxy:
+    build: .
+    container_name: reverse-container
+    environment:
+      - STATIC_APP1=172.20.0.2:80
+      - STATIC_APP2=172.20.0.3:80
+      - DYNAMIC_APP1=172.20.0.4:3000
+      - DYNAMIC_APP2=172.20.0.5:3000
+      - PORTAINER=172.20.0.6:9000
+    networks:
+      static-network:
+        ipv4_address: 172.20.0.10
+  portainer:
+    image: portainer/portainer
+    container_name: portainer
+    restart: always
+    command: -H unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./portainer/data:/data
+      - ./shared:/shared
+    networks:
+      static-network:
+        ipv4_address: 172.20.0.6
+networks:
+  static-network:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
