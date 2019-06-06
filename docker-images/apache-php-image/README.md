@@ -1,8 +1,8 @@
 # Static HTTP server with apache httpd
 
-## Auteurs: Geatan Bacso et Remy Vuagniaux
+## Auteurs: Gaetan Bacso et Remy Vuagniaux
 
-## Realisation:
+## Réalisation:
 
 Nous avons suivit le webcast pour d'abort comprendre comment créer un serveur apache http static.
 Nous avons donc utiliser une image docker disponible qui contient un serveur apache.
