@@ -10,6 +10,8 @@ Nous avons, pour finir, créer un fichier Docker-compose qui est un script qui c
 Dans ce Docker-compose nous attribuons des adresses static à chaque server.
 En plus du serveur dynamic et static nous avons aussi ajouter un serveur "portainer" qui permet de gérer les containers et images.
 
+Le serveur reverse-proxy a toujours une adresse static a 172.20.0.10
+
 ## Build:
 
 Pour créer l'infrastructure complète, il suffit de lancer:
