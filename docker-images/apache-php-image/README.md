@@ -9,6 +9,8 @@ Nous avons donc utiliser une image docker disponible qui contient un serveur apa
 Il n'y a pas eu de configuration a faire il fallais juste placer les fichiers de la page html au bonne endroit.
 Nous avons aussi du trouver une nouvelle template.
 
+Pour la partie 4, nous avons du faire une requête ajax. Cette requête fait appele au serveur dynamic (du même domain) pour qu'il lui fournisse un tableau json. Comme cette requete est faites en javascript, nous avons placer un setinterval qui fait cette requete toutes les secondes.
+
 Pour les objectifs secondaires nous avons du créer 2 dossiers qui définissent le même serveur, mais qui affiche un nom différent dans la page html, pour pouvoir les différenciers.
 
 ## Build:
