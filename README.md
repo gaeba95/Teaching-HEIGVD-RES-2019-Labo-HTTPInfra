@@ -1,4 +1,4 @@
-# Teaching-HEIGVD-RES-2018-Labo-HTTPInfra
+# Teaching-HEIGVD-RES-2019-Labo-HTTPInfra
 
 ## Objectives
 
